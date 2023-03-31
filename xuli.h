@@ -1,5 +1,6 @@
 #include<string>
 using namespace std;
+
 struct thongtin_KH{
     string location,name;
     int timkiem; int phanloai;
@@ -67,18 +68,43 @@ void tachMS(thongtin_KH KHV[], int index){
             }
         }
 } 
-int check_location( string &KH){
-    int num;
-    if(KH.compare(locat_const[0]) == 0){
-        return 0;
-    }else{
-        if(KH.compare(locat_const[1]) == 0){
-            return 1;
+
+void phanloaiKH ( thongtin_KH KH[], int &biendem){
+    for(int i = 0; i <= biendem; i++){
+       if(KH[i].location.compare(locat_const[0]) == 0){
+            KH[i].phanloai = 0;
         }else{
-            if(KH.compare(locat_const[2]) == 0)
-                return 2;
+            if(KH[i].location.compare( locat_const[1]) == 0){
+                KH[i].phanloai = 1;
+            }else {
+                if(KH[i].location.compare(locat_const[2]) == 0){
+                KH[i].phanloai = 2;  
+                }else{ 
+                    KH[i].phanloai = -1;
+                }
+            } 
         }
     }
+}
+
+// Xoa du lieu
+void delname(int &biendem, thongtin_KH KH[],int index){
+        // Khi index o vi tri cuoi
+	if(index == (biendem - 1)){
+		KH[index].name == "";
+        KH[index].location == "";
+        KH[index].numberphone == "";
+        KH[index].MS = "";
+        KH[index].time = "";
+        KH[index].loaighe = "";
+        KH[index].soghe = "";
+        KH[index].day_choose = "";
+	}else{   //khi index o dau hoac giua
+		for(int i = index; i < biendem - 1 ; i++){
+    	    		KH[i] = KH[i + 1];
+    		}
+	}
+        biendem -= 1;
 }
 
 

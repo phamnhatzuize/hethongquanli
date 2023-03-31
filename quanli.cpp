@@ -115,20 +115,7 @@ void table_Bed_choose (int ox, int oy,string &bedchoose){
     //hide_Cursor();
 }
 
-void phanloaiKH ( thongtin_KH KH[], int &biendem){
-    for(int i = 0; i < biendem; i++){
-        if(KH[i].location.compare(locat_const[0]) == 0){
-            KH[i].phanloai = 0;
-        }else{
-            if(KH[i].location.compare(locat_const[1]) == 0){
-                KH[i].phanloai = 1;
-            }else{
-                if(KH[i].location.compare(locat_const[2]) == 0)
-                    KH[i].phanloai = 2;
-            }
-        }   
-    }
-}
+
 // ham hien thi so ghe da phan loai
 void display_2(string &time, string &loaighe, string &soghe){
     if(time == "8"){
@@ -137,13 +124,11 @@ void display_2(string &time, string &loaighe, string &soghe){
         }else if(loaighe == "B"){
             table_Bed_choose(80,22,soghe);
         }
-    }else{
-        if(time == "10"){
-            if(loaighe == "A"){
-                table_Bed_choose(120,10,soghe);
-            }else if(loaighe == "B"){
-                table_Bed_choose(120,22,soghe);
-            }
+    }else if(time == "10"){
+        if(loaighe == "A"){
+            table_Bed_choose(120,10,soghe);
+        }else if(loaighe == "B"){
+            table_Bed_choose(120,22,soghe);
         }
     }
 }
@@ -224,7 +209,7 @@ string choose_Day(int ox, int oy,thongtin_KH KH[],int biendem){
                     return KH[biendem].day_choose ; 
                     break;
                 }
-                case 13:{       //enter
+                case 13:{ //enter   
                     TextColor(14);
                     gotoxy(88,8);
                     cout << "8 gio";
@@ -232,31 +217,56 @@ string choose_Day(int ox, int oy,thongtin_KH KH[],int biendem){
                     cout << "10 gio";
                     gotoxy(36,11);
                     cout <<day_display[day-1];
-                        for(int i = 0; i < biendem; i++){  
-                            tachMS(KH,i);                   // tach cac du lieu rieng
-                            if((day_display[day-1]).compare(KH[i].day_choose) == 0 ){       // kiem tra xem ngay vua chon da co trong bo nho
-                                if(check_location(KH[biendem].location) == 0){              // kiem tra vi tri toi
-                                    if(KH[i].phanloai == 0)                                 // phan loai khach hang cua tung vi tri
-                                        display_2(KH[i].time,KH[i].loaighe, KH[i].soghe);
-                                }else{
-                                    if(check_location(KH[biendem].location) == 1){
-                                        if(KH[i].phanloai == 1)
-                                            display_2(KH[i].time,KH[i].loaighe, KH[i].soghe);
-                                    }else{
-                                        if(check_location(KH[biendem].location) == 2){
-                                            if(KH[i].phanloai == 2)
-                                                display_2(KH[i].time,KH[i].loaighe, KH[i].soghe);
-                                        }
+                    TextColor(15);
+                    table_Bed(80,10);
+                    table_Bed(80,22);
+                    table_Bed(120,10);
+                    table_Bed(120,22);
+					// check phan loai khach hang theo location 
+                    switch(KH[biendem].phanloai){
+                        case 0:{
+                            for(int i = 0; i < biendem; i++){
+                            	// lay tat ca phan tu thuoc dia diem quy dinh 1
+                                if(KH[i].phanloai == 0){
+                                    if((day_display[day-1]).compare(KH[i].day_choose) == 0){ // check nay cua phan tu trung voi ngay dang chon
+                                            tachMS(KH,i);
+                                            display_2(KH[i].time,KH[i].loaighe, KH[i].soghe); // in ra man hinh so ghe da book
                                     }
                                 }
-                            }else{                 // neu khong thoa man ve lai bang 
-                                TextColor(15);
-                                table_Bed(80,10);
-                                table_Bed(80,22);
-                                table_Bed(120,10);
-                                table_Bed(120,22);
                             }
+                            break;
                         }
+                        case 1:{
+                            for(int i = 0; i < biendem; i++){
+                                if(KH[i].phanloai == 1){
+                                    if((day_display[day-1]).compare(KH[i].day_choose) == 0){
+                                            tachMS(KH,i);
+                                            display_2(KH[i].time,KH[i].loaighe, KH[i].soghe);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        case 2:{
+                            for(int i = 0; i < biendem; i++){
+                                if(KH[i].phanloai == 2){
+                                    if((day_display[day-1]).compare(KH[i].day_choose) == 0){
+                                            tachMS(KH,i);
+                                            display_2(KH[i].time,KH[i].loaighe, KH[i].soghe);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        default:{ // tra ve neu dai diem khong co trong danh sach
+                            TextColor(15);
+                            table_Bed(80,10);
+                            table_Bed(80,22);
+                            table_Bed(120,10);
+                            table_Bed(120,22);
+                            break;
+                        }
+                    } 
                     setX -= 6;
                     setspace -= 1;
                     day -= 1; 
@@ -326,6 +336,7 @@ string choose_Day(int ox, int oy,thongtin_KH KH[],int biendem){
 
 void nhap_Du_Lieu(thongtin_KH KH[], int &biendem){
     nhap1(KH[biendem]);
+    phanloaiKH(KH,biendem);
     choose_Day(20,14,KH,biendem);
     gotoxy(30,29);
     TextColor(14);
@@ -369,23 +380,6 @@ void table(int ox, int oy,int a,thongtin_KH &KHV,int ant,int Space,int denta){
     cout <<"|";
 }
 
-// ham tim vi tri can tim
-// int check_day(int biendem, thongtin_KH KH[],string checkMS){
-//     int bienxuat = -1;
-//     for(int i = 0; i < biendem && bienxuat == -1; i++){
-//         // Khi bienxuat gan bang i can phai co dieu kien de out vong lap
-//         // Co the su dung lenh break;
-//         if(checkMS == KH[i].day) {
-// 		    bienxuat = i; 
-// 	    }else{
-// 		     bienxuat = -1;
-// 	    }
-//     }
-//     return bienxuat;
-// }
-
-// xoa du lieu khach hang
-
 void xuat_Du_Lieu(thongtin_KH KH[], int &biendem){
     int Space;
     Space = Spacestring(KH,biendem);
@@ -420,7 +414,7 @@ void xuat_Du_Lieu(thongtin_KH KH[], int &biendem){
 }
 
 // ham xu li in ra danh sach va dieu khien danh sach
-int SearchNamexuli( thongtin_KH KH[], int &biendem, int &m){
+int Indanhsachtimkiem( thongtin_KH KH[], int &biendem, int &m){
 	string KHx,ten;
     int cnt = 0;
     int check = -1;
@@ -524,6 +518,7 @@ int SearchNamexuli( thongtin_KH KH[], int &biendem, int &m){
         }
     }
 }
+
 // chinh sua du lieu khach hang
 // void update_Du_lieu(thongtin_KH KH[],int index,int ox, int oy){
 //     int n;
@@ -552,25 +547,6 @@ int SearchNamexuli( thongtin_KH KH[], int &biendem, int &m){
 //     gotoxy(ox,oy+4);
 //     cout << "Cap nhat thanh cong !!!";
 // }
-// Xoa du lieu
-void delname(int &biendem, thongtin_KH KH[],int index){
-        // Khi index o vi tri cuoi
-	if(index == (biendem - 1)){
-		KH[index].name == "";
-        KH[index].location == "";
-        KH[index].numberphone == "";
-        KH[index].MS = "";
-        KH[index].time = "";
-        KH[index].loaighe = "";
-        KH[index].soghe = "";
-        KH[index].day_choose = "";
-	}else{   //khi index o dau hoac giua
-		for(int i = index; i < biendem - 1 ; i++){
-    	    		KH[i] = KH[i + 1];
-    		}
-	}
-        biendem -= 1;
-}
 
 // dieu khien cac chuc nang 
 int dkmenu2(thongtin_KH KH[], int biendem, int &n){
@@ -651,7 +627,7 @@ void SearchName(thongtin_KH KH[],int &biendem){
     Space = Spacestring(KH,biendem);
     int ox =  Space + 85;
     int oy = 18;
-    m = SearchNamexuli(KH,biendem,m);
+    m = Indanhsachtimkiem(KH,biendem,m);
     for(int i = 0; i < biendem; i++){
         if(KH[i].timkiem == m){
             dkmenu2(KH,biendem,n);
